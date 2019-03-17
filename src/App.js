@@ -28,20 +28,57 @@ class App extends Component {
       epic: true,
       ikon: true,
       resorts: [],
-      didItSnow: false
+      didItSnow: false,
+      pending: false,
+      x: null
     };
     this.toggleIkon = this.toggleIkon.bind(this)
     this.toggleEpic = this.toggleEpic.bind(this)
+    this.handleTouchStart = this.handleTouchStart.bind(this)
+  }
+
+  handleTouchStart(event) {
+    const x = event.touches[0].clientX
+    this.setState({x})
   }
 
   toggleIkon() {
+
+    if(this.state.pending) {
+      return
+    }
+    this.setState({pending:true})
+
+    setTimeout(function() {
+      this.setState({pending:false})
+    }.bind(this), 100)
+
     const ikon = !this.state.ikon
     this.setState({ikon})
 
     localStorage.setItem('ikon', ikon ? 'true' : 'false')
 
   }
-  toggleEpic() {
+  toggleEpic(event) {
+
+    if(event && event.touches && event.touches[0]) {
+      const newX = event.touches[0].clientX
+      const diff = newX - this.state.x
+      if(Math.abs(diff) < 1) {
+        // it's not a horizontal swipe
+        return
+      }
+    }
+
+    if(this.state.pending) {
+      return
+    }
+    this.setState({pending:true})
+
+    setTimeout(function() {
+      this.setState({pending:false})
+    }.bind(this), 100)
+
     const epic = !this.state.epic
     this.setState({epic})
 
@@ -144,16 +181,16 @@ class App extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           <p>{message}</p>
           <div className="toggles">
-            <div class="big">Epic pass</div>
-            <div className="toggle-border">
-              <input onClick={this.toggleEpic} type="checkbox" id="epic" checked={epic}/>
+            <div className="big">Epic pass</div>
+            <div onTouchStart={this.handleTouchStart} onTouchEnd={this.toggleEpic} className="toggle-border">
+              <input onChange={this.toggleEpic} type="checkbox" id="epic" checked={epic}/>
               <label htmlFor="epic">
                 <div className="handle"></div>
               </label>
             </div>
             <div className="big">Ikon pass</div>
-            <div className="toggle-border">
-              <input onClick={this.toggleIkon} type="checkbox" id="ikon" checked={ikon} />
+            <div onTouchStart={this.handleTouchStart} onTouchEnd={this.toggleIkon} className="toggle-border">
+              <input onChange={this.toggleIkon} type="checkbox" id="ikon" checked={ikon} />
               <label htmlFor="ikon">
                 <div className="handle"></div>
               </label>
@@ -161,8 +198,8 @@ class App extends Component {
           </div>
           {this.state.resorts.length === 0 && <p>Select a ski pass.</p>}
 
-          <ul class="plain-list">
-            {resorts.map(item => <li class="resort">
+          <ul className="plain-list">
+            {resorts.map(item => <li key={item._id} className="resort">
               <div className="resort-name">{item.resort_name_short}</div>
               <div className="resort-inches">{item.pastSnow.snow0day}"</div>
             </li>)}
