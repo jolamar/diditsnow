@@ -50,14 +50,17 @@ class App extends Component {
 
   componentDidMount() {
 
-    const epic = localStorage.getItem('epic') === 'true' ? true : false
-    const ikon = localStorage.getItem('ikon') === 'true' ? true : false
+    if(localStorage.getItem('epic')) {
+      const epic = localStorage.getItem('epic') === 'true' ? true : false
+      const ikon = localStorage.getItem('ikon') === 'true' ? true : false
 
-    this.setState({epic, ikon})
-
+      this.setState({epic, ikon})
+    }
 
     axios.get('https://skiapp.onthesnow.com/app/widgets/resortlist?region=us&regionids=251&language=en&pagetype=skireport&direction=-1&order=stop&limit=45&offset=0&countrycode=USA&minvalue=-1&open=anystatus')
       .then(res => {
+        this.setState({didItSnow: false})
+
         let resorts = res.data.rows.filter(r=> {
           const name = r.resort_name_short
           const ikon = this.state.ikon
@@ -71,7 +74,18 @@ class App extends Component {
             return resort
           }
           return false
+        }).sort((a,b) => {
+          if(a.pastSnow.snow0day < b.pastSnow.snow0day) {
+            return 1
+          }
+
+          if(a.pastSnow.snow0day > b.pastSnow.snow0day) {
+            return -1
+          }
+
+          return 0;
         })
+
         this.setState({resorts})
       })
   }
@@ -81,8 +95,9 @@ class App extends Component {
     if(prevState.epic !== this.state.epic || prevState.ikon !== this.state.ikon) {
       axios.get('https://skiapp.onthesnow.com/app/widgets/resortlist?region=us&regionids=251&language=en&pagetype=skireport&direction=-1&order=stop&limit=45&offset=0&countrycode=USA&minvalue=-1&open=anystatus')
         .then(res => {
-          let resorts = []
-          resorts = res.data.rows.filter(r=> {
+          this.setState({didItSnow: false})
+
+          let resorts = res.data.rows.filter(r=> {
             const name = r.resort_name_short
             const ikon = this.state.ikon
             const epic = this.state.epic
@@ -95,6 +110,16 @@ class App extends Component {
               return resort
             }
             return false
+          }).sort((a,b) => {
+            if(a.pastSnow.snow0day < b.pastSnow.snow0day) {
+              return 1
+            }
+
+            if(a.pastSnow.snow0day > b.pastSnow.snow0day) {
+              return -1
+            }
+
+            return 0;
           })
           this.setState({resorts})
         })
@@ -108,7 +133,7 @@ class App extends Component {
       ? require('./yes.png')
       : require('./no.png')
 
-    const message = this.state.didItSnow ? "Pow day! :D" : "No new snow :("
+    const message = this.state.didItSnow ? "It snowed! :D" : "It didn't snow :("
 
     const ikon = this.state.ikon
     const epic = this.state.epic
@@ -134,6 +159,8 @@ class App extends Component {
               </label>
             </div>
           </div>
+          {this.state.resorts.length === 0 && <p>Select a ski pass.</p>}
+
           <ul class="plain-list">
             {resorts.map(item => <li class="resort">
               <div className="resort-name">{item.resort_name_short}</div>
