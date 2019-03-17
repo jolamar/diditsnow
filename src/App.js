@@ -144,14 +144,14 @@ class App extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           <p>{message}</p>
           <div className="toggles">
-            <div class="big">Epic</div>
+            <div class="big">Epic pass</div>
             <div className="toggle-border">
               <input onClick={this.toggleEpic} type="checkbox" id="epic" checked={epic}/>
               <label htmlFor="epic">
                 <div className="handle"></div>
               </label>
             </div>
-            <div className="big">Ikon</div>
+            <div className="big">Ikon pass</div>
             <div className="toggle-border">
               <input onClick={this.toggleIkon} type="checkbox" id="ikon" checked={ikon} />
               <label htmlFor="ikon">
