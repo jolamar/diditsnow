@@ -4,8 +4,10 @@
 
 .App-logo {
   animation: App-logo-spin infinite 20s linear;
-  height: 40vmin;
+  height: 240px;
+  width: 240px;
   pointer-events: none;
+  margin-top: 2em;
 }
 
 .App-header {
@@ -23,6 +25,22 @@
   color: #61dafb;
 }
 
+.plain-list {
+  padding: 0;
+  list-style-type: none;
+}
+
+.resort {
+  margin-bottom: 1.5em;
+}
+.resort-name {
+
+}
+
+.resort-inches {
+  font-size: 2em;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -30,4 +48,95 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.toggles {
+  width: 300px;
+  background: 1px solid black;
+}
+
+.toggle-border {
+  width: 300px;
+  height: 80px;
+  border: 2px solid #f0ebeb;
+  border-radius: 130px;
+  margin-bottom: 45px;
+  padding: 25px;
+  background: linear-gradient(to bottom right, white, rgba(220,220,220,.5)), white;
+  box-shadow: 0 0 0 2px #fbfbfb;
+  cursor: pointer;
+}
+
+.toggle-border:last-child {
+  margin-bottom: 0;
+}
+
+input[type="checkbox"] {
+  display: none;
+}
+
+label {
+  position: relative;
+  display: inline-block;
+  width: 300px;
+  height: 80px;
+  background: #d13613;
+  border-radius: 80px;
+  cursor: pointer;
+  box-shadow: inset 0 0 16px rgba(0,0,0,.3);
+  transition: background .5s;
+}
+
+label:after,
+label:before {
+  content: "";
+  position: absolute;
+  top: 25px;
+  left: -100px;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #f0ebeb;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px #fbfbfb, inset 1px 3px 6px rgba(0,0,0,.3);
+  background: #d13613;
+  transition: background .5s;
+}
+
+label:before {
+  left: calc(100% + 100px - 20px);
+  background: #d1cac9;
+}
+
+input[type="checkbox"]:checked + label {
+  background: #13d162;
+}
+
+.handle {
+  position: absolute;
+  top: -15px;
+  left: -5px;
+  width: 110px;
+  height: 110px;
+  border: 1px solid #e5e5e5;
+  background: repeating-radial-gradient(circle at 50% 50%, rgba(200,200,200,.2) 0%, rgba(200,200,200,.2) 2%, transparent 2%, transparent 3%, rgba(200,200,200,.2) 3%, transparent 3%), conic-gradient(white 0%, silver 10%, white 35%, silver 45%, white 60%, silver 70%, white 80%, silver 95%, white 100%);
+  border-radius: 50%;
+  box-shadow: 3px 5px 10px 0 rgba(0,0,0,.4);
+  transition: left .4s;
+}
+
+input[type="checkbox"]:checked + label > .handle {
+  left: calc(100% - 110px + 5px);
+}
+
+input[type="checkbox"]:checked + label:after {
+  background: #d1cac9;
+}
+
+input[type="checkbox"]:checked + label:before {
+  background: #13d162;
+}
+
+.big {
+  font-size: 1.5em;
+  margin-bottom: 15px;
 }
